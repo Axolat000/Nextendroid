@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 
 class NextendoViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -62,11 +64,34 @@ class NextendoViewModel(application: Application) : AndroidViewModel(application
     private val _loginError = MutableStateFlow<String?>(null)
     val loginError: StateFlow<String?> = _loginError.asStateFlow()
 
+    private val _networkStatus = MutableStateFlow(NetworkStatus.CHECKING)
+    val networkStatus: StateFlow<NetworkStatus> = _networkStatus.asStateFlow()
+
+    private val _registrationOpen = MutableStateFlow(true)
+    val registrationOpen: StateFlow<Boolean> = _registrationOpen.asStateFlow()
+
+    private val _usernameAvailable = MutableStateFlow<Boolean?>(null)
+    val usernameAvailable: StateFlow<Boolean?> = _usernameAvailable.asStateFlow()
+
+    private val _sessions = MutableStateFlow<List<UserSession>>(emptyList())
+    val sessions: StateFlow<List<UserSession>> = _sessions.asStateFlow()
+
+    private val _sessionsLoading = MutableStateFlow(false)
+    val sessionsLoading: StateFlow<Boolean> = _sessionsLoading.asStateFlow()
+
     init {
         val storedHex = sessionManager.getAccentColorHex()
         updateNextendoPinkColor(storedHex)
         loadAllData()
+        checkNetworkStatus()
+        loadSiteConfig()
         startAutoRefreshLoop()
+    }
+
+    private fun loadSiteConfig() {
+        viewModelScope.launch {
+            _registrationOpen.value = repository.getSiteConfig().registrationOpen
+        }
     }
 
     private fun startAutoRefreshLoop() {
@@ -76,7 +101,14 @@ class NextendoViewModel(application: Application) : AndroidViewModel(application
                 if (_isLoggedIn.value) {
                     refreshLiveDataSilently()
                 }
+                checkNetworkStatus()
             }
+        }
+    }
+
+    fun checkNetworkStatus() {
+        viewModelScope.launch {
+            _networkStatus.value = repository.checkNetworkStatus()
         }
     }
 
@@ -231,10 +263,214 @@ class NextendoViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun register(username: String, email: String, password: String, country: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _loginError.value = null
+            val result = repository.register(username, email, password, country)
+            _isLoading.value = false
+
+            if (result.isSuccess) {
+                _isLoggedIn.value = true
+                loadAllData()
+            } else {
+                _loginError.value = result.exceptionOrNull()?.message ?: "Impossible de créer le compte"
+            }
+        }
+    }
+
+    fun guestLogin(username: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _loginError.value = null
+            val result = repository.guestLogin(username)
+            _isLoading.value = false
+
+            if (result.isSuccess) {
+                _isLoggedIn.value = true
+                loadAllData()
+            } else {
+                _loginError.value = result.exceptionOrNull()?.message ?: "Impossible de créer le compte invité"
+            }
+        }
+    }
+
+    fun clearLoginError() {
+        _loginError.value = null
+    }
+
+    fun checkUsernameAvailable(username: String) {
+        if (username.length < 3) {
+            _usernameAvailable.value = null
+            return
+        }
+        viewModelScope.launch {
+            _usernameAvailable.value = repository.checkUsernameAvailable(username)
+        }
+    }
+
+    fun forgotPassword(email: String, onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val res = repository.forgotPassword(email)
+            _isLoading.value = false
+            if (res.isSuccess) {
+                onResult(true, "E-mail de réinitialisation envoyé.")
+            } else {
+                onResult(false, res.exceptionOrNull()?.message ?: "Erreur")
+            }
+        }
+    }
+
+    fun resetPassword(token: String, newPassword: String, onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val res = repository.resetPassword(token, newPassword)
+            _isLoading.value = false
+            if (res.isSuccess) {
+                onResult(true, "Mot de passe réinitialisé.")
+            } else {
+                onResult(false, res.exceptionOrNull()?.message ?: "Erreur")
+            }
+        }
+    }
+
+    fun resendVerification(onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            val res = repository.resendVerification()
+            if (res.isSuccess) {
+                onResult(true, "E-mail de vérification renvoyé.")
+            } else {
+                onResult(false, res.exceptionOrNull()?.message ?: "Erreur")
+            }
+        }
+    }
+
+    fun changeEmail(email: String, password: String, onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val res = repository.changeEmail(email, password)
+            _isLoading.value = false
+            if (res.isSuccess) {
+                _currentUser.value = res.getOrNull()
+                onResult(true, "E-mail mis à jour.")
+            } else {
+                onResult(false, res.exceptionOrNull()?.message ?: "Erreur")
+            }
+        }
+    }
+
+    fun deleteAccount(password: String, onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val res = repository.deleteAccount(password)
+            _isLoading.value = false
+            if (res.isSuccess) {
+                onResult(true, "Compte supprimé.")
+                logout()
+            } else {
+                onResult(false, res.exceptionOrNull()?.message ?: "Erreur")
+            }
+        }
+    }
+
+    fun loadSessions() {
+        viewModelScope.launch {
+            _sessionsLoading.value = true
+            _sessions.value = repository.getSessions()
+            _sessionsLoading.value = false
+        }
+    }
+
+    fun revokeSession(id: String, isCurrent: Boolean) {
+        viewModelScope.launch {
+            val res = repository.revokeSession(id)
+            if (res.isSuccess) {
+                if (isCurrent) {
+                    logout()
+                } else {
+                    loadSessions()
+                }
+            }
+        }
+    }
+
+    fun revokeAllSessions() {
+        viewModelScope.launch {
+            val res = repository.revokeAllSessions()
+            if (res.isSuccess) {
+                logout()
+            }
+        }
+    }
+
+    fun removeFriend(pid: Long, onResult: (Boolean) -> Unit = {}) {
+        viewModelScope.launch {
+            val res = repository.removeFriend(pid)
+            if (res.isSuccess) {
+                _friends.value = _friends.value.filterNot { it.pid == pid }
+                onResult(true)
+            } else {
+                onResult(false)
+            }
+        }
+    }
+
+    fun blockFriend(pid: Long, onResult: (Boolean) -> Unit = {}) {
+        viewModelScope.launch {
+            val res = repository.blockFriend(pid)
+            if (res.isSuccess) {
+                _friends.value = _friends.value.filterNot { it.pid == pid }
+                onResult(true)
+            } else {
+                onResult(false)
+            }
+        }
+    }
+
+    fun deleteSave(titleId: String, onResult: (Boolean) -> Unit = {}) {
+        viewModelScope.launch {
+            val res = repository.deleteSave(titleId)
+            if (res.isSuccess) {
+                _savesResponse.value = _savesResponse.value?.let { current ->
+                    current.copy(
+                        saves = current.saves.filterNot { it.titleId == titleId },
+                        totalSize = current.totalSize - (current.saves.find { it.titleId == titleId }?.size ?: 0)
+                    )
+                }
+                onResult(true)
+            } else {
+                onResult(false)
+            }
+        }
+    }
+
+    fun downloadSave(titleId: String, fileName: String, onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            val res = repository.downloadSave(titleId)
+            if (res.isSuccess) {
+                try {
+                    val dir = File(getApplication<Application>().getExternalFilesDir(null), "saves")
+                    if (!dir.exists()) dir.mkdirs()
+                    val outFile = File(dir, fileName)
+                    res.getOrNull()?.byteStream()?.use { input ->
+                        FileOutputStream(outFile).use { output -> input.copyTo(output) }
+                    }
+                    onResult(true, outFile.absolutePath)
+                } catch (e: Exception) {
+                    onResult(false, e.message ?: "Erreur d'écriture")
+                }
+            } else {
+                onResult(false, res.exceptionOrNull()?.message ?: "Erreur de téléchargement")
+            }
+        }
+    }
+
     fun logout() {
         sessionManager.clearSession()
         _isLoggedIn.value = false
         _currentUser.value = null
+        _sessions.value = emptyList()
     }
 
     fun selectFriend(friend: Friend) {
@@ -284,13 +520,14 @@ class NextendoViewModel(application: Application) : AndroidViewModel(application
 
     fun toggleFavoriteFriend(pid: Long) {
         viewModelScope.launch {
+            val newFavorite = _friends.value.find { it.pid == pid }?.let { !it.isFavorite } ?: true
             _friends.value = _friends.value.map { friend ->
                 if (friend.pid == pid) {
-                    friend.copy(isFavorite = !friend.isFavorite)
+                    friend.copy(isFavorite = newFavorite)
                 } else friend
             }
             try {
-                apiService.toggleFavorite(pid)
+                repository.setFavorite(pid, newFavorite)
             } catch (e: Exception) {
                 // ignore
             }

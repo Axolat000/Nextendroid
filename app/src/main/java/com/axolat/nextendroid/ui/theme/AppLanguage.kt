@@ -183,6 +183,69 @@ object Strings {
         AppLanguage.IT -> "Lingua"
     }
 
+    // Brand name — identical across every locale, so no per-language branch is needed.
+    fun discord(@Suppress("UNUSED_PARAMETER") lang: AppLanguage): String = "Discord"
+
+    fun linked(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Lié"
+        AppLanguage.EN -> "Linked"
+        AppLanguage.ES -> "Vinculado"
+        AppLanguage.DE -> "Verknüpft"
+        AppLanguage.PT -> "Ligado"
+        AppLanguage.RU -> "Привязан"
+        AppLanguage.IT -> "Collegato"
+    }
+
+    fun notLinked(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Non lié"
+        AppLanguage.EN -> "Not linked"
+        AppLanguage.ES -> "No vinculado"
+        AppLanguage.DE -> "Nicht verknüpft"
+        AppLanguage.PT -> "Não ligado"
+        AppLanguage.RU -> "Не привязан"
+        AppLanguage.IT -> "Non collegato"
+    }
+
+    fun networkStatusTitle(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Statut du réseau"
+        AppLanguage.EN -> "Network status"
+        AppLanguage.ES -> "Estado de la red"
+        AppLanguage.DE -> "Netzwerkstatus"
+        AppLanguage.PT -> "Estado da rede"
+        AppLanguage.RU -> "Статус сети"
+        AppLanguage.IT -> "Stato della rete"
+    }
+
+    fun networkOperational(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Opérationnel"
+        AppLanguage.EN -> "Operational"
+        AppLanguage.ES -> "Operativo"
+        AppLanguage.DE -> "Betriebsbereit"
+        AppLanguage.PT -> "Operacional"
+        AppLanguage.RU -> "Работает"
+        AppLanguage.IT -> "Operativo"
+    }
+
+    fun networkDown(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Indisponible"
+        AppLanguage.EN -> "Down"
+        AppLanguage.ES -> "No disponible"
+        AppLanguage.DE -> "Nicht verfügbar"
+        AppLanguage.PT -> "Indisponível"
+        AppLanguage.RU -> "Недоступно"
+        AppLanguage.IT -> "Non disponibile"
+    }
+
+    fun networkChecking(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Vérification..."
+        AppLanguage.EN -> "Checking..."
+        AppLanguage.ES -> "Comprobando..."
+        AppLanguage.DE -> "Wird geprüft..."
+        AppLanguage.PT -> "A verificar..."
+        AppLanguage.RU -> "Проверка..."
+        AppLanguage.IT -> "Verifica in corso..."
+    }
+
     fun amisHeader(lang: AppLanguage): String = when (lang) {
         AppLanguage.FR -> "AMIS"
         AppLanguage.EN -> "FRIENDS"
@@ -391,5 +454,471 @@ object Strings {
         AppLanguage.PT -> "Nenhum guardado na nuvem encontrado."
         AppLanguage.RU -> "Сохранения в облаке не найдены."
         AppLanguage.IT -> "Nessun salvataggio cloud trovato."
+    }
+
+    // --- Register ---
+    fun registerTitle(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Créer un compte"
+        AppLanguage.EN -> "Create an account"
+        AppLanguage.ES -> "Crear una cuenta"
+        AppLanguage.DE -> "Konto erstellen"
+        AppLanguage.PT -> "Criar uma conta"
+        AppLanguage.RU -> "Создать аккаунт"
+        AppLanguage.IT -> "Crea un account"
+    }
+
+    fun usernameLabel(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Pseudo"
+        AppLanguage.EN -> "Username"
+        AppLanguage.ES -> "Nombre de usuario"
+        AppLanguage.DE -> "Benutzername"
+        AppLanguage.PT -> "Nome de utilizador"
+        AppLanguage.RU -> "Имя пользователя"
+        AppLanguage.IT -> "Nome utente"
+    }
+
+    fun emailLabel(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "E-mail"
+        AppLanguage.EN -> "Email"
+        AppLanguage.ES -> "Correo electrónico"
+        AppLanguage.DE -> "E-Mail"
+        AppLanguage.PT -> "E-mail"
+        AppLanguage.RU -> "Эл. почта"
+        AppLanguage.IT -> "E-mail"
+    }
+
+    fun passwordLabel(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Mot de passe"
+        AppLanguage.EN -> "Password"
+        AppLanguage.ES -> "Contraseña"
+        AppLanguage.DE -> "Passwort"
+        AppLanguage.PT -> "Palavra-passe"
+        AppLanguage.RU -> "Пароль"
+        AppLanguage.IT -> "Password"
+    }
+
+    fun confirmPasswordLabel(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Confirmer le mot de passe"
+        AppLanguage.EN -> "Confirm password"
+        AppLanguage.ES -> "Confirmar contraseña"
+        AppLanguage.DE -> "Passwort bestätigen"
+        AppLanguage.PT -> "Confirmar palavra-passe"
+        AppLanguage.RU -> "Подтвердите пароль"
+        AppLanguage.IT -> "Conferma password"
+    }
+
+    fun createAccountButton(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Créer mon compte"
+        AppLanguage.EN -> "Create my account"
+        AppLanguage.ES -> "Crear mi cuenta"
+        AppLanguage.DE -> "Konto erstellen"
+        AppLanguage.PT -> "Criar a minha conta"
+        AppLanguage.RU -> "Создать аккаунт"
+        AppLanguage.IT -> "Crea il mio account"
+    }
+
+    fun usernameAvailableText(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Pseudo disponible"
+        AppLanguage.EN -> "Username available"
+        AppLanguage.ES -> "Nombre de usuario disponible"
+        AppLanguage.DE -> "Benutzername verfügbar"
+        AppLanguage.PT -> "Nome de utilizador disponível"
+        AppLanguage.RU -> "Имя доступно"
+        AppLanguage.IT -> "Nome utente disponibile"
+    }
+
+    fun usernameTakenText(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Pseudo déjà pris"
+        AppLanguage.EN -> "Username already taken"
+        AppLanguage.ES -> "Nombre de usuario ya en uso"
+        AppLanguage.DE -> "Benutzername bereits vergeben"
+        AppLanguage.PT -> "Nome de utilizador já em uso"
+        AppLanguage.RU -> "Имя уже занято"
+        AppLanguage.IT -> "Nome utente già in uso"
+    }
+
+    fun alreadyHaveAccount(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Déjà un compte ? Se connecter"
+        AppLanguage.EN -> "Already have an account? Log in"
+        AppLanguage.ES -> "¿Ya tienes una cuenta? Inicia sesión"
+        AppLanguage.DE -> "Bereits ein Konto? Anmelden"
+        AppLanguage.PT -> "Já tens conta? Inicia sessão"
+        AppLanguage.RU -> "Уже есть аккаунт? Войти"
+        AppLanguage.IT -> "Hai già un account? Accedi"
+    }
+
+    fun noAccountYet(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Pas encore de compte ? Créer un compte"
+        AppLanguage.EN -> "No account yet? Create one"
+        AppLanguage.ES -> "¿Aún no tienes cuenta? Crea una"
+        AppLanguage.DE -> "Noch kein Konto? Konto erstellen"
+        AppLanguage.PT -> "Ainda não tens conta? Cria uma"
+        AppLanguage.RU -> "Ещё нет аккаунта? Создать"
+        AppLanguage.IT -> "Non hai un account? Creane uno"
+    }
+
+    fun continueAsGuest(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Continuer en invité"
+        AppLanguage.EN -> "Continue as guest"
+        AppLanguage.ES -> "Continuar como invitado"
+        AppLanguage.DE -> "Als Gast fortfahren"
+        AppLanguage.PT -> "Continuar como convidado"
+        AppLanguage.RU -> "Продолжить как гость"
+        AppLanguage.IT -> "Continua come ospite"
+    }
+
+    fun registrationClosed(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Les inscriptions sont temporairement fermées."
+        AppLanguage.EN -> "Registration is temporarily closed."
+        AppLanguage.ES -> "Los registros están cerrados temporalmente."
+        AppLanguage.DE -> "Die Registrierung ist vorübergehend geschlossen."
+        AppLanguage.PT -> "As inscrições estão temporariamente fechadas."
+        AppLanguage.RU -> "Регистрация временно закрыта."
+        AppLanguage.IT -> "Le registrazioni sono temporaneamente chiuse."
+    }
+
+    // --- Forgot / Reset password ---
+    fun forgotPasswordLink(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Mot de passe oublié ?"
+        AppLanguage.EN -> "Forgot password?"
+        AppLanguage.ES -> "¿Olvidaste tu contraseña?"
+        AppLanguage.DE -> "Passwort vergessen?"
+        AppLanguage.PT -> "Esqueceste-te da palavra-passe?"
+        AppLanguage.RU -> "Забыли пароль?"
+        AppLanguage.IT -> "Password dimenticata?"
+    }
+
+    fun forgotPasswordTitle(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Réinitialiser le mot de passe"
+        AppLanguage.EN -> "Reset password"
+        AppLanguage.ES -> "Restablecer contraseña"
+        AppLanguage.DE -> "Passwort zurücksetzen"
+        AppLanguage.PT -> "Repor palavra-passe"
+        AppLanguage.RU -> "Сброс пароля"
+        AppLanguage.IT -> "Reimposta password"
+    }
+
+    fun forgotPasswordDesc(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Entre ton e-mail, on t'envoie un lien pour réinitialiser ton mot de passe."
+        AppLanguage.EN -> "Enter your email and we'll send you a link to reset your password."
+        AppLanguage.ES -> "Introduce tu correo y te enviaremos un enlace para restablecer tu contraseña."
+        AppLanguage.DE -> "Gib deine E-Mail ein, wir senden dir einen Link zum Zurücksetzen deines Passworts."
+        AppLanguage.PT -> "Introduz o teu e-mail e enviamos-te um link para repor a palavra-passe."
+        AppLanguage.RU -> "Введите e-mail, и мы отправим ссылку для сброса пароля."
+        AppLanguage.IT -> "Inserisci la tua e-mail: ti invieremo un link per reimpostare la password."
+    }
+
+    fun sendResetLink(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Envoyer le lien"
+        AppLanguage.EN -> "Send link"
+        AppLanguage.ES -> "Enviar enlace"
+        AppLanguage.DE -> "Link senden"
+        AppLanguage.PT -> "Enviar link"
+        AppLanguage.RU -> "Отправить ссылку"
+        AppLanguage.IT -> "Invia link"
+    }
+
+    fun resetPasswordTitle(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Nouveau mot de passe"
+        AppLanguage.EN -> "New password"
+        AppLanguage.ES -> "Nueva contraseña"
+        AppLanguage.DE -> "Neues Passwort"
+        AppLanguage.PT -> "Nova palavra-passe"
+        AppLanguage.RU -> "Новый пароль"
+        AppLanguage.IT -> "Nuova password"
+    }
+
+    fun resetTokenLabel(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Code reçu par e-mail"
+        AppLanguage.EN -> "Code from your email"
+        AppLanguage.ES -> "Código recibido por correo"
+        AppLanguage.DE -> "Code aus der E-Mail"
+        AppLanguage.PT -> "Código recebido por e-mail"
+        AppLanguage.RU -> "Код из письма"
+        AppLanguage.IT -> "Codice ricevuto via e-mail"
+    }
+
+    fun haveCodeAlready(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "J'ai déjà un code"
+        AppLanguage.EN -> "I already have a code"
+        AppLanguage.ES -> "Ya tengo un código"
+        AppLanguage.DE -> "Ich habe bereits einen Code"
+        AppLanguage.PT -> "Já tenho um código"
+        AppLanguage.RU -> "У меня уже есть код"
+        AppLanguage.IT -> "Ho già un codice"
+    }
+
+    fun resetPasswordButton(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Réinitialiser"
+        AppLanguage.EN -> "Reset"
+        AppLanguage.ES -> "Restablecer"
+        AppLanguage.DE -> "Zurücksetzen"
+        AppLanguage.PT -> "Repor"
+        AppLanguage.RU -> "Сбросить"
+        AppLanguage.IT -> "Reimposta"
+    }
+
+    fun backToLogin(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Retour à la connexion"
+        AppLanguage.EN -> "Back to login"
+        AppLanguage.ES -> "Volver al inicio de sesión"
+        AppLanguage.DE -> "Zurück zur Anmeldung"
+        AppLanguage.PT -> "Voltar ao início de sessão"
+        AppLanguage.RU -> "Назад ко входу"
+        AppLanguage.IT -> "Torna al login"
+    }
+
+    // --- Account: email verification / change / delete ---
+    fun resendVerificationButton(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Renvoyer l'e-mail de vérification"
+        AppLanguage.EN -> "Resend verification email"
+        AppLanguage.ES -> "Reenviar correo de verificación"
+        AppLanguage.DE -> "Bestätigungs-E-Mail erneut senden"
+        AppLanguage.PT -> "Reenviar e-mail de verificação"
+        AppLanguage.RU -> "Отправить письмо повторно"
+        AppLanguage.IT -> "Rinvia e-mail di verifica"
+    }
+
+    fun changeEmailTitle(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Changer d'e-mail"
+        AppLanguage.EN -> "Change email"
+        AppLanguage.ES -> "Cambiar correo"
+        AppLanguage.DE -> "E-Mail ändern"
+        AppLanguage.PT -> "Mudar e-mail"
+        AppLanguage.RU -> "Изменить e-mail"
+        AppLanguage.IT -> "Cambia e-mail"
+    }
+
+    fun newEmailLabel(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Nouvel e-mail"
+        AppLanguage.EN -> "New email"
+        AppLanguage.ES -> "Nuevo correo"
+        AppLanguage.DE -> "Neue E-Mail"
+        AppLanguage.PT -> "Novo e-mail"
+        AppLanguage.RU -> "Новый e-mail"
+        AppLanguage.IT -> "Nuova e-mail"
+    }
+
+    fun currentPasswordLabel(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Mot de passe actuel"
+        AppLanguage.EN -> "Current password"
+        AppLanguage.ES -> "Contraseña actual"
+        AppLanguage.DE -> "Aktuelles Passwort"
+        AppLanguage.PT -> "Palavra-passe atual"
+        AppLanguage.RU -> "Текущий пароль"
+        AppLanguage.IT -> "Password attuale"
+    }
+
+    fun saveButton(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Enregistrer"
+        AppLanguage.EN -> "Save"
+        AppLanguage.ES -> "Guardar"
+        AppLanguage.DE -> "Speichern"
+        AppLanguage.PT -> "Guardar"
+        AppLanguage.RU -> "Сохранить"
+        AppLanguage.IT -> "Salva"
+    }
+
+    fun cancelButton(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Annuler"
+        AppLanguage.EN -> "Cancel"
+        AppLanguage.ES -> "Cancelar"
+        AppLanguage.DE -> "Abbrechen"
+        AppLanguage.PT -> "Cancelar"
+        AppLanguage.RU -> "Отмена"
+        AppLanguage.IT -> "Annulla"
+    }
+
+    fun deleteAccountButton(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Supprimer mon compte"
+        AppLanguage.EN -> "Delete my account"
+        AppLanguage.ES -> "Eliminar mi cuenta"
+        AppLanguage.DE -> "Konto löschen"
+        AppLanguage.PT -> "Eliminar a minha conta"
+        AppLanguage.RU -> "Удалить аккаунт"
+        AppLanguage.IT -> "Elimina il mio account"
+    }
+
+    fun deleteAccountConfirmTitle(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Supprimer ce compte ?"
+        AppLanguage.EN -> "Delete this account?"
+        AppLanguage.ES -> "¿Eliminar esta cuenta?"
+        AppLanguage.DE -> "Dieses Konto löschen?"
+        AppLanguage.PT -> "Eliminar esta conta?"
+        AppLanguage.RU -> "Удалить этот аккаунт?"
+        AppLanguage.IT -> "Eliminare questo account?"
+    }
+
+    fun deleteAccountConfirmDesc(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Cette action est irréversible. Entre ton mot de passe pour confirmer."
+        AppLanguage.EN -> "This action is irreversible. Enter your password to confirm."
+        AppLanguage.ES -> "Esta acción es irreversible. Introduce tu contraseña para confirmar."
+        AppLanguage.DE -> "Diese Aktion ist unwiderruflich. Gib dein Passwort zur Bestätigung ein."
+        AppLanguage.PT -> "Esta ação é irreversível. Introduz a tua palavra-passe para confirmar."
+        AppLanguage.RU -> "Это действие необратимо. Введите пароль для подтверждения."
+        AppLanguage.IT -> "Questa azione è irreversibile. Inserisci la password per confermare."
+    }
+
+    // --- Sessions ---
+    fun mySessions(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Mes sessions"
+        AppLanguage.EN -> "My sessions"
+        AppLanguage.ES -> "Mis sesiones"
+        AppLanguage.DE -> "Meine Sitzungen"
+        AppLanguage.PT -> "As minhas sessões"
+        AppLanguage.RU -> "Мои сессии"
+        AppLanguage.IT -> "Le mie sessioni"
+    }
+
+    fun disconnectDevice(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Déconnecter"
+        AppLanguage.EN -> "Disconnect"
+        AppLanguage.ES -> "Desconectar"
+        AppLanguage.DE -> "Trennen"
+        AppLanguage.PT -> "Desligar"
+        AppLanguage.RU -> "Отключить"
+        AppLanguage.IT -> "Disconnetti"
+    }
+
+    fun disconnectThisDevice(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Me déconnecter"
+        AppLanguage.EN -> "Disconnect me"
+        AppLanguage.ES -> "Desconectarme"
+        AppLanguage.DE -> "Mich trennen"
+        AppLanguage.PT -> "Desligar-me"
+        AppLanguage.RU -> "Отключить меня"
+        AppLanguage.IT -> "Disconnettimi"
+    }
+
+    fun disconnectAllDevices(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Tout déconnecter"
+        AppLanguage.EN -> "Disconnect all"
+        AppLanguage.ES -> "Desconectar todo"
+        AppLanguage.DE -> "Alle trennen"
+        AppLanguage.PT -> "Desligar tudo"
+        AppLanguage.RU -> "Отключить всё"
+        AppLanguage.IT -> "Disconnetti tutto"
+    }
+
+    fun thisDeviceLabel(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "cet appareil"
+        AppLanguage.EN -> "this device"
+        AppLanguage.ES -> "este dispositivo"
+        AppLanguage.DE -> "dieses Gerät"
+        AppLanguage.PT -> "este dispositivo"
+        AppLanguage.RU -> "это устройство"
+        AppLanguage.IT -> "questo dispositivo"
+    }
+
+    fun noSessions(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Aucune session active."
+        AppLanguage.EN -> "No active sessions."
+        AppLanguage.ES -> "No hay sesiones activas."
+        AppLanguage.DE -> "Keine aktiven Sitzungen."
+        AppLanguage.PT -> "Nenhuma sessão ativa."
+        AppLanguage.RU -> "Нет активных сессий."
+        AppLanguage.IT -> "Nessuna sessione attiva."
+    }
+
+    // --- Friends: remove / block ---
+    fun removeFriendAction(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Retirer cet ami"
+        AppLanguage.EN -> "Remove friend"
+        AppLanguage.ES -> "Eliminar amigo"
+        AppLanguage.DE -> "Freund entfernen"
+        AppLanguage.PT -> "Remover amigo"
+        AppLanguage.RU -> "Удалить из друзей"
+        AppLanguage.IT -> "Rimuovi amico"
+    }
+
+    fun blockFriendAction(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Bloquer"
+        AppLanguage.EN -> "Block"
+        AppLanguage.ES -> "Bloquear"
+        AppLanguage.DE -> "Blockieren"
+        AppLanguage.PT -> "Bloquear"
+        AppLanguage.RU -> "Заблокировать"
+        AppLanguage.IT -> "Blocca"
+    }
+
+    fun confirmRemoveFriendDesc(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Il ne sera plus dans ta liste d'amis."
+        AppLanguage.EN -> "They will no longer be in your friends list."
+        AppLanguage.ES -> "Ya no estará en tu lista de amigos."
+        AppLanguage.DE -> "Er wird nicht mehr in deiner Freundesliste sein."
+        AppLanguage.PT -> "Deixará de estar na tua lista de amigos."
+        AppLanguage.RU -> "Он больше не будет в вашем списке друзей."
+        AppLanguage.IT -> "Non sarà più nella tua lista amici."
+    }
+
+    fun confirmBlockFriendDesc(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Il ne pourra plus t'envoyer de demande ni te voir en ligne."
+        AppLanguage.EN -> "They won't be able to send you requests or see you online anymore."
+        AppLanguage.ES -> "Ya no podrá enviarte solicitudes ni verte en línea."
+        AppLanguage.DE -> "Er kann dir keine Anfragen mehr senden oder dich online sehen."
+        AppLanguage.PT -> "Deixará de poder enviar-te pedidos ou ver-te online."
+        AppLanguage.RU -> "Он больше не сможет отправлять запросы или видеть вас в сети."
+        AppLanguage.IT -> "Non potrà più inviarti richieste né vederti online."
+    }
+
+    // --- Saves: delete / download ---
+    fun deleteSaveAction(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Supprimer"
+        AppLanguage.EN -> "Delete"
+        AppLanguage.ES -> "Eliminar"
+        AppLanguage.DE -> "Löschen"
+        AppLanguage.PT -> "Eliminar"
+        AppLanguage.RU -> "Удалить"
+        AppLanguage.IT -> "Elimina"
+    }
+
+    fun downloadSaveAction(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Télécharger"
+        AppLanguage.EN -> "Download"
+        AppLanguage.ES -> "Descargar"
+        AppLanguage.DE -> "Herunterladen"
+        AppLanguage.PT -> "Transferir"
+        AppLanguage.RU -> "Скачать"
+        AppLanguage.IT -> "Scarica"
+    }
+
+    fun confirmDeleteSaveDesc(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Cette sauvegarde cloud sera supprimée définitivement."
+        AppLanguage.EN -> "This cloud save will be permanently deleted."
+        AppLanguage.ES -> "Este guardado en la nube se eliminará permanentemente."
+        AppLanguage.DE -> "Dieser Cloud-Speicherstand wird endgültig gelöscht."
+        AppLanguage.PT -> "Este guardado na nuvem será eliminado definitivamente."
+        AppLanguage.RU -> "Это облачное сохранение будет удалено навсегда."
+        AppLanguage.IT -> "Questo salvataggio cloud verrà eliminato definitivamente."
+    }
+
+    fun saveDownloadedTo(lang: AppLanguage, path: String): String = when (lang) {
+        AppLanguage.FR -> "Téléchargé : $path"
+        AppLanguage.EN -> "Downloaded: $path"
+        AppLanguage.ES -> "Descargado: $path"
+        AppLanguage.DE -> "Heruntergeladen: $path"
+        AppLanguage.PT -> "Transferido: $path"
+        AppLanguage.RU -> "Скачано: $path"
+        AppLanguage.IT -> "Scaricato: $path"
+    }
+
+    fun saveNotEligibleEmail(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Vérifie ton adresse e-mail pour activer les sauvegardes dans le cloud."
+        AppLanguage.EN -> "Verify your email address to enable cloud saves."
+        AppLanguage.ES -> "Verifica tu dirección de correo para activar los guardados en la nube."
+        AppLanguage.DE -> "Bestätige deine E-Mail-Adresse, um Cloud-Speicherstände zu aktivieren."
+        AppLanguage.PT -> "Verifica o teu e-mail para ativar os guardados na nuvem."
+        AppLanguage.RU -> "Подтвердите e-mail, чтобы включить облачные сохранения."
+        AppLanguage.IT -> "Verifica il tuo indirizzo e-mail per attivare i salvataggi cloud."
+    }
+
+    fun saveNotEligibleDiscord(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Lie ton compte à Discord pour activer les sauvegardes dans le cloud."
+        AppLanguage.EN -> "Link your account to Discord to enable cloud saves."
+        AppLanguage.ES -> "Vincula tu cuenta a Discord para activar los guardados en la nube."
+        AppLanguage.DE -> "Verknüpfe dein Konto mit Discord, um Cloud-Speicherstände zu aktivieren."
+        AppLanguage.PT -> "Liga a tua conta ao Discord para ativar os guardados na nuvem."
+        AppLanguage.RU -> "Привяжите аккаунт к Discord, чтобы включить облачные сохранения."
+        AppLanguage.IT -> "Collega il tuo account a Discord per attivare i salvataggi cloud."
     }
 }

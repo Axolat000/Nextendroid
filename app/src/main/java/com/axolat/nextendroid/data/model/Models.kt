@@ -70,7 +70,64 @@ data class LoginRequest(
 
 data class LoginResponse(
     val token: String?,
+    @SerializedName("nex_token") val nexToken: String? = null,
     val error: String?
+)
+
+data class RegisterRequest(
+    val username: String,
+    val email: String,
+    val password: String,
+    val country: String
+)
+
+data class GuestRequest(
+    val username: String
+)
+
+data class UsernameAvailableResponse(
+    val available: Boolean = false
+)
+
+data class ForgotRequest(
+    val email: String
+)
+
+data class ResetRequest(
+    val token: String,
+    val password: String
+)
+
+data class ChangeEmailRequest(
+    val email: String,
+    val password: String
+)
+
+data class DeleteAccountRequest(
+    val password: String
+)
+
+data class RevokeSessionRequest(
+    val id: String
+)
+
+data class SessionsResponse(
+    val sessions: List<UserSession> = emptyList()
+)
+
+data class UserSession(
+    val id: String = "",
+    val kind: String = "",
+    @SerializedName("kind_label") val kindLabel: String = "",
+    val current: Boolean = false,
+    val playing: Boolean = false,
+    val geo: String? = null,
+    val ip: String? = null,
+    @SerializedName("last_seen") val lastSeen: String? = null
+)
+
+data class SiteConfigResponse(
+    @SerializedName("registration_open") val registrationOpen: Boolean = true
 )
 
 // --- User Account ---
@@ -189,7 +246,7 @@ data class SavesResponse(
     val limit: Long = 5242880,
     val isBooster: Boolean = false,
     val eligible: Boolean = true,
-    val reason: String? = null
+    @SerializedName("reasonCode") val reasonCode: String? = null
 )
 
 data class CloudSaveItem(
@@ -201,6 +258,11 @@ data class CloudSaveItem(
 ) {
     val resolvedName: String
         get() = name.takeIf { !it.isNullOrBlank() } ?: GameDictionary.getGameName(titleId)
+}
+
+// --- Network Status ---
+enum class NetworkStatus {
+    CHECKING, OPERATIONAL, DOWN
 }
 
 // --- Online Counts ---

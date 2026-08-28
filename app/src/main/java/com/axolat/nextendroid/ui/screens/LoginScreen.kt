@@ -1,6 +1,14 @@
 package com.axolat.nextendroid.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -8,7 +16,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -22,10 +29,21 @@ fun LoginScreen(
     onLoginClick: (email: String, pw: String) -> Unit,
     isLoading: Boolean,
     errorMessage: String? = null,
+    appLanguage: AppLanguage = AppLanguage.FR,
+    onRegisterClick: () -> Unit = {},
+    onForgotPasswordClick: () -> Unit = {},
+    onGuestLoginClick: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var cardVisible by remember { mutableStateOf(false) }
+    var guestFieldOpen by remember { mutableStateOf(false) }
+    var guestUsername by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        cardVisible = true
+    }
 
     Box(
         modifier = modifier
@@ -34,6 +52,10 @@ fun LoginScreen(
             .padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
+        AnimatedVisibility(
+            visible = cardVisible,
+            enter = fadeIn(tween(400)) + slideInVertically(tween(400)) { it / 6 }
+        ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -106,13 +128,31 @@ fun LoginScreen(
                 shape = RoundedCornerShape(16.dp)
             )
 
-            if (!errorMessage.isNullOrEmpty()) {
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = errorMessage,
-                    color = MaterialTheme.colorScheme.error,
-                    fontSize = 13.sp
-                )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = Strings.forgotPasswordLink(appLanguage),
+                color = NextendoTextSecondary,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .clickable { onForgotPasswordClick() }
+            )
+
+            AnimatedVisibility(
+                visible = !errorMessage.isNullOrEmpty(),
+                enter = fadeIn(tween(200)) + expandVertically(tween(200)),
+                exit = fadeOut(tween(150)) + shrinkVertically(tween(150))
+            ) {
+                Column {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = errorMessage.orEmpty(),
+                        color = MaterialTheme.colorScheme.error,
+                        fontSize = 13.sp
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -142,6 +182,69 @@ fun LoginScreen(
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = Strings.noAccountYet(appLanguage),
+                color = NextendoPink,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 13.sp,
+                modifier = Modifier.clickable { onRegisterClick() }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+            HorizontalDivider(color = NextendoDivider)
+            Spacer(modifier = Modifier.height(12.dp))
+
+            if (guestFieldOpen) {
+                OutlinedTextField(
+                    value = guestUsername,
+                    onValueChange = { guestUsername = it },
+                    label = { Text(Strings.usernameLabel(appLanguage), color = NextendoTextSecondary) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = NextendoPink,
+                        unfocusedBorderColor = NextendoSurfaceVariant,
+                        focusedTextColor = NextendoTextPrimary,
+                        unfocusedTextColor = NextendoTextPrimary,
+                        focusedContainerColor = NextendoSurfaceElevated,
+                        unfocusedContainerColor = NextendoSurfaceElevated
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Button(
+                    onClick = { onGuestLoginClick(guestUsername.trim()) },
+                    enabled = !isLoading && guestUsername.trim().length >= 3,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = NextendoSurfaceElevated),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Text(
+                        text = Strings.continueAsGuest(appLanguage),
+                        color = NextendoTextPrimary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )
+                }
+            } else {
+                TextButton(
+                    onClick = { guestFieldOpen = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = Strings.continueAsGuest(appLanguage),
+                        color = NextendoTextSecondary,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 13.sp
+                    )
+                }
+            }
+        }
         }
     }
 }

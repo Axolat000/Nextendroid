@@ -1,12 +1,8 @@
 package com.axolat.nextendroid.data.repository
 
-import com.axolat.nextendroid.data.api.CountryRequest
-import com.axolat.nextendroid.data.api.NextendoApiService
-import com.axolat.nextendroid.data.api.PidPayload
-import com.axolat.nextendroid.data.api.ProfileRequest
-import com.axolat.nextendroid.data.api.SendFriendRequestPayload
-import com.axolat.nextendroid.data.api.UsernameRequest
+import com.axolat.nextendroid.data.api.*
 import com.axolat.nextendroid.data.model.*
+import okhttp3.ResponseBody
 
 class NextendoRepository(
     private val apiService: NextendoApiService,
@@ -31,6 +27,179 @@ class NextendoRepository(
             } else {
                 Result.failure(e)
             }
+        }
+    }
+
+    suspend fun register(username: String, email: String, password: String, country: String): Result<String> {
+        return try {
+            val response = apiService.register(RegisterRequest(username, email, password, country))
+            if (response.isSuccessful && response.body()?.token != null) {
+                val token = response.body()!!.token!!
+                sessionManager.saveSession(token, username = username)
+                Result.success(token)
+            } else {
+                Result.failure(Exception(response.body()?.error ?: "Impossible de créer le compte"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun guestLogin(username: String): Result<String> {
+        return try {
+            val response = apiService.guestLogin(GuestRequest(username))
+            if (response.isSuccessful && response.body()?.token != null) {
+                val token = response.body()!!.token!!
+                sessionManager.saveSession(token, username = username)
+                Result.success(token)
+            } else {
+                Result.failure(Exception(response.body()?.error ?: "Impossible de créer le compte invité"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getSiteConfig(): SiteConfigResponse {
+        return try {
+            val response = apiService.getSiteConfig()
+            if (response.isSuccessful && response.body() != null) response.body()!! else SiteConfigResponse()
+        } catch (e: Exception) {
+            SiteConfigResponse()
+        }
+    }
+
+    suspend fun checkUsernameAvailable(username: String): Boolean? {
+        return try {
+            val response = apiService.checkUsernameAvailable(username)
+            if (response.isSuccessful) response.body()?.available else null
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    suspend fun forgotPassword(email: String): Result<Unit> {
+        return try {
+            val response = apiService.forgotPassword(ForgotRequest(email))
+            if (response.isSuccessful) Result.success(Unit) else Result.failure(Exception("Impossible d'envoyer l'e-mail de réinitialisation"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun resetPassword(token: String, newPassword: String): Result<Unit> {
+        return try {
+            val response = apiService.resetPassword(ResetRequest(token, newPassword))
+            if (response.isSuccessful) Result.success(Unit) else Result.failure(Exception("Lien de réinitialisation invalide ou expiré"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun resendVerification(): Result<Unit> {
+        return try {
+            val response = apiService.resendVerification()
+            if (response.isSuccessful) Result.success(Unit) else Result.failure(Exception("Impossible d'envoyer l'e-mail de vérification"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun changeEmail(email: String, password: String): Result<UserAccount> {
+        return try {
+            val response = apiService.changeEmail(ChangeEmailRequest(email, password))
+            if (response.isSuccessful && response.body()?.account != null) {
+                Result.success(response.body()!!.account!!)
+            } else {
+                Result.failure(Exception("Impossible de modifier l'e-mail"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteAccount(password: String): Result<Unit> {
+        return try {
+            val response = apiService.deleteAccount(DeleteAccountRequest(password))
+            if (response.isSuccessful) Result.success(Unit) else Result.failure(Exception("Mot de passe incorrect"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getSessions(): List<UserSession> {
+        return try {
+            val response = apiService.getSessions()
+            if (response.isSuccessful && response.body() != null) response.body()!!.sessions else emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    suspend fun revokeSession(id: String): Result<Unit> {
+        return try {
+            val response = apiService.revokeSession(RevokeSessionRequest(id))
+            if (response.isSuccessful) Result.success(Unit) else Result.failure(Exception("Impossible de déconnecter cette session"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun revokeAllSessions(): Result<Unit> {
+        return try {
+            val response = apiService.revokeAllSessions()
+            if (response.isSuccessful) Result.success(Unit) else Result.failure(Exception("Impossible de déconnecter les sessions"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun removeFriend(pid: Long): Result<Unit> {
+        return try {
+            val response = apiService.removeFriend(PidPayload(pid))
+            if (response.isSuccessful) Result.success(Unit) else Result.failure(Exception("Impossible de retirer cet ami"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun blockFriend(pid: Long): Result<Unit> {
+        return try {
+            val response = apiService.blockFriend(PidPayload(pid))
+            if (response.isSuccessful) Result.success(Unit) else Result.failure(Exception("Impossible de bloquer cet utilisateur"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun setFavorite(pid: Long, favorite: Boolean): Result<Unit> {
+        return try {
+            val response = apiService.setFavorite(FavoritePayload(pid, favorite))
+            if (response.isSuccessful) Result.success(Unit) else Result.failure(Exception("Impossible de mettre à jour le favori"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteSave(titleId: String): Result<Unit> {
+        return try {
+            val response = apiService.deleteSave(titleId)
+            if (response.isSuccessful) Result.success(Unit) else Result.failure(Exception("Impossible de supprimer cette sauvegarde"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun downloadSave(titleId: String): Result<ResponseBody> {
+        return try {
+            val response = apiService.downloadSave(titleId)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                Result.failure(Exception("Aucune sauvegarde dans le cloud"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
@@ -209,6 +378,15 @@ class NextendoRepository(
             }
         } catch (e: Exception) {
             getMockOnlineCounts()
+        }
+    }
+
+    suspend fun checkNetworkStatus(): NetworkStatus {
+        return try {
+            apiService.pingServer()
+            NetworkStatus.OPERATIONAL
+        } catch (e: Exception) {
+            NetworkStatus.DOWN
         }
     }
 

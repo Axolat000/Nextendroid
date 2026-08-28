@@ -8,10 +8,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Block
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.PersonRemove
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +43,8 @@ fun FriendDetailScreen(
     appLanguage: AppLanguage = AppLanguage.FR,
     onBackClick: () -> Unit,
     onFavoriteToggle: (Long) -> Unit,
+    onRemoveFriend: (Long) -> Unit = {},
+    onBlockFriend: (Long) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val isOnline = (friend.presence?.status ?: 0) > 0
@@ -45,6 +54,10 @@ fun FriendDetailScreen(
     val gameCoverUrl = if (isOnline && !friend.presence?.appId.isNullOrEmpty()) {
         GameDictionary.getGameCoverUrl(friend.presence?.appId)
     } else null
+
+    var menuExpanded by remember { mutableStateOf(false) }
+    var confirmRemove by remember { mutableStateOf(false) }
+    var confirmBlock by remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = modifier
@@ -84,6 +97,38 @@ fun FriendDetailScreen(
                         tint = if (isFavorite) NextendoBoosterPink else NextendoTextSecondary,
                         modifier = Modifier.size(24.dp)
                     )
+                }
+
+                Box {
+                    IconButton(onClick = { menuExpanded = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = null,
+                            tint = NextendoTextSecondary
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false },
+                        modifier = Modifier.background(NextendoSurfaceElevated)
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(text = Strings.removeFriendAction(appLanguage), color = NextendoTextPrimary) },
+                            leadingIcon = { Icon(imageVector = Icons.Filled.PersonRemove, contentDescription = null, tint = NextendoTextPrimary) },
+                            onClick = {
+                                menuExpanded = false
+                                confirmRemove = true
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(text = Strings.blockFriendAction(appLanguage), color = MaterialTheme.colorScheme.error) },
+                            leadingIcon = { Icon(imageVector = Icons.Filled.Block, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
+                            onClick = {
+                                menuExpanded = false
+                                confirmBlock = true
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -296,5 +341,41 @@ fun FriendDetailScreen(
                 }
             }
         }
+    }
+
+    if (confirmRemove) {
+        AlertDialog(
+            onDismissRequest = { confirmRemove = false },
+            title = { Text(text = Strings.removeFriendAction(appLanguage)) },
+            text = { Text(text = Strings.confirmRemoveFriendDesc(appLanguage)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmRemove = false
+                    onRemoveFriend(friend.pid)
+                    onBackClick()
+                }) { Text(text = Strings.removeFriendAction(appLanguage), color = MaterialTheme.colorScheme.error) }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmRemove = false }) { Text(text = Strings.cancelButton(appLanguage)) }
+            }
+        )
+    }
+
+    if (confirmBlock) {
+        AlertDialog(
+            onDismissRequest = { confirmBlock = false },
+            title = { Text(text = Strings.blockFriendAction(appLanguage)) },
+            text = { Text(text = Strings.confirmBlockFriendDesc(appLanguage)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmBlock = false
+                    onBlockFriend(friend.pid)
+                    onBackClick()
+                }) { Text(text = Strings.blockFriendAction(appLanguage), color = MaterialTheme.colorScheme.error) }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmBlock = false }) { Text(text = Strings.cancelButton(appLanguage)) }
+            }
+        )
     }
 }

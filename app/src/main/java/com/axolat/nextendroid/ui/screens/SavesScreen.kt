@@ -1,5 +1,6 @@
 package com.axolat.nextendroid.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,12 +8,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudDone
+import androidx.compose.material.icons.filled.CloudOff
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.axolat.nextendroid.data.model.CloudSaveItem
 import com.axolat.nextendroid.data.model.GameDictionary
 import com.axolat.nextendroid.data.model.SavesResponse
 import com.axolat.nextendroid.ui.theme.*
@@ -33,11 +36,17 @@ import java.util.Locale
 fun SavesScreen(
     savesResponse: SavesResponse?,
     appLanguage: AppLanguage = AppLanguage.FR,
+    onDeleteSave: (titleId: String, onResult: (Boolean) -> Unit) -> Unit = { _, _ -> },
+    onDownloadSave: (titleId: String, fileName: String, onResult: (Boolean, String) -> Unit) -> Unit = { _, _, _ -> },
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    var deleteTarget by remember { mutableStateOf<CloudSaveItem?>(null) }
     val totalSize = savesResponse?.totalSize ?: 1363264L // 1.3 MB
     val limit = savesResponse?.limit ?: 10485760L // 10.0 MB
     val isBooster = savesResponse?.isBooster ?: true
+    val eligible = savesResponse?.eligible ?: true
+    val reasonCode = savesResponse?.reasonCode
     val saves = savesResponse?.saves ?: emptyList()
 
     val totalMb = totalSize / (1024f * 1024f)
@@ -71,6 +80,39 @@ fun SavesScreen(
                     fontSize = 18.sp
                 )
             }
+        }
+
+        // Eligibility Gate: cloud saves require a verified email AND a linked Discord account
+        if (!eligible) {
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(NextendoSurfaceCard)
+                        .padding(20.dp),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.CloudOff,
+                        contentDescription = null,
+                        tint = NextendoPink,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(14.dp))
+                    Text(
+                        text = if (reasonCode == "discord") {
+                            Strings.saveNotEligibleDiscord(appLanguage)
+                        } else {
+                            Strings.saveNotEligibleEmail(appLanguage)
+                        },
+                        color = NextendoTextSecondary,
+                        fontSize = 13.sp
+                    )
+                }
+            }
+            return@LazyColumn
         }
 
         // Storage Progress Card
@@ -287,8 +329,56 @@ fun SavesScreen(
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 13.sp
                     )
+
+                    IconButton(
+                        onClick = {
+                            onDownloadSave(item.titleId, "${item.resolvedName}.zip") { success, message ->
+                                val text = if (success) Strings.saveDownloadedTo(appLanguage, message) else message
+                                Toast.makeText(context, text, Toast.LENGTH_LONG).show()
+                            }
+                        },
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Download,
+                            contentDescription = Strings.downloadSaveAction(appLanguage),
+                            tint = NextendoTextSecondary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+
+                    IconButton(
+                        onClick = { deleteTarget = item },
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = Strings.deleteSaveAction(appLanguage),
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                 }
             }
         }
+    }
+
+    deleteTarget?.let { item ->
+        AlertDialog(
+            onDismissRequest = { deleteTarget = null },
+            title = { Text(text = Strings.deleteSaveAction(appLanguage)) },
+            text = { Text(text = Strings.confirmDeleteSaveDesc(appLanguage)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    deleteTarget = null
+                    onDeleteSave(item.titleId) { success ->
+                        if (!success) Toast.makeText(context, "Erreur", Toast.LENGTH_SHORT).show()
+                    }
+                }) { Text(text = Strings.deleteSaveAction(appLanguage), color = MaterialTheme.colorScheme.error) }
+            },
+            dismissButton = {
+                TextButton(onClick = { deleteTarget = null }) { Text(text = Strings.cancelButton(appLanguage)) }
+            }
+        )
     }
 }

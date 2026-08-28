@@ -75,7 +75,12 @@ object GameDictionary {
 
     fun getGameCoverUrl(titleIdOrName: String?): String? {
         val canonical = getCanonicalTitleId(titleIdOrName) ?: return null
-        return "file:///android_asset/covers/$canonical.jpg"
+        if (canonicalMap.containsKey(canonical)) {
+            return "file:///android_asset/covers/$canonical.jpg"
+        }
+        // Title not bundled locally (server added a game since this app build) — fall back
+        // to the live server-hosted cover so new games still render art without an app update.
+        return "https://nextendo.network/api/gamemedia/$canonical/cover"
     }
 
     fun getAvatarUrl(image: String?, avatar: String?): String? {

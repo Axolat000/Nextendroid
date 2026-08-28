@@ -1,5 +1,10 @@
 package com.axolat.nextendroid.ui.components
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -7,7 +12,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -97,12 +104,23 @@ fun AvatarView(
             }
         }
 
-        // Online dot (Pink in Nextendo UI)
+        // Online dot (Pink in Nextendo UI) — gentle pulse to draw the eye
         if (showOnlineDot && isOnline) {
+            val pulseTransition = rememberInfiniteTransition(label = "onlineDotPulse")
+            val pulseScale by pulseTransition.animateFloat(
+                initialValue = 1f,
+                targetValue = 1.18f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(900),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "onlineDotPulseScale"
+            )
             Box(
                 modifier = Modifier
                     .size(size * 0.28f)
                     .align(Alignment.BottomEnd)
+                    .scale(pulseScale)
                     .background(NextendoOnlinePink, CircleShape)
                     .border(2.dp, Color(0xFF0C0E14), CircleShape)
             )

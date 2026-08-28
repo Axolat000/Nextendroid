@@ -1,5 +1,10 @@
 package com.axolat.nextendroid.ui.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,6 +21,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -65,7 +71,16 @@ fun BottomNavBar(
         ) {
             NavTab.entries.forEach { tab ->
                 val isSelected = tab == selectedTab
-                val contentColor = if (isSelected) NextendoPink else NextendoTextSecondary
+                val contentColor by animateColorAsState(
+                    targetValue = if (isSelected) NextendoPink else NextendoTextSecondary,
+                    animationSpec = tween(220),
+                    label = "navTabColor"
+                )
+                val iconSize by animateDpAsState(
+                    targetValue = if (isSelected) 26.dp else 24.dp,
+                    animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+                    label = "navTabIconSize"
+                )
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -79,7 +94,7 @@ fun BottomNavBar(
                         imageVector = if (isSelected) tab.selectedIcon else tab.unselectedIcon,
                         contentDescription = tab.title(appLanguage),
                         tint = contentColor,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(iconSize)
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
