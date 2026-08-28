@@ -193,16 +193,6 @@ object Strings {
         AppLanguage.IT -> "AMICI"
     }
 
-    fun selectLanguage(lang: AppLanguage): String = when (lang) {
-        AppLanguage.FR -> "Langue de l'application"
-        AppLanguage.EN -> "App Language"
-        AppLanguage.ES -> "Idioma de la aplicación"
-        AppLanguage.DE -> "App-Sprache"
-        AppLanguage.PT -> "Idioma da aplicação"
-        AppLanguage.RU -> "Язык приложения"
-        AppLanguage.IT -> "Lingua dell'applicazione"
-    }
-
     fun offlineText(lang: AppLanguage): String = when (lang) {
         AppLanguage.FR -> "Hors ligne"
         AppLanguage.EN -> "Offline"
@@ -296,7 +286,7 @@ object Strings {
     fun copyButton(lang: AppLanguage): String = when (lang) {
         AppLanguage.FR -> "Copier"
         AppLanguage.EN -> "Copy"
-        AppLanguage.ES -> "Copiar"
+        AppLanguage.ES -> "Copy"
         AppLanguage.DE -> "Kopieren"
         AppLanguage.PT -> "Copiar"
         AppLanguage.RU -> "Копировать"
@@ -323,23 +313,13 @@ object Strings {
         AppLanguage.IT -> "Invia richiesta"
     }
 
-    fun playersMet(lang: AppLanguage): String = when (lang) {
-        AppLanguage.FR -> "Joueurs rencontrés"
-        AppLanguage.EN -> "Players met"
-        AppLanguage.ES -> "Jugadores conocidos"
-        AppLanguage.DE -> "Getroffene Spieler"
-        AppLanguage.PT -> "Jogadores encontrados"
-        AppLanguage.RU -> "Встреченные игроки"
-        AppLanguage.IT -> "Giocatori incontrati"
-    }
-
     fun incomingRequests(lang: AppLanguage): String = when (lang) {
         AppLanguage.FR -> "DEMANDES ENTRANTES"
         AppLanguage.EN -> "INCOMING REQUESTS"
         AppLanguage.ES -> "SOLICITUDES ENTRANTES"
         AppLanguage.DE -> "EINGEHENDE ANFRAGEN"
         AppLanguage.PT -> "PEDIDOS RECEBIDOS"
-        AppLanguage.RU -> "ВХОДЯЩИЕ ЗАПРОСЫ"
+        AppLanguage.RU -> "ВХОДЯЩИE ЗАПРОСЫ"
         AppLanguage.IT -> "RICHIESTE IN ARRIVO"
     }
 
@@ -371,76 +351,6 @@ object Strings {
         AppLanguage.PT -> "HISTÓRICO DE JOGO"
         AppLanguage.RU -> "ИСТОРИЯ ИГР"
         AppLanguage.IT -> "CRONOLOGIA DI GIOCO"
-    }
-
-    fun emailStatus(lang: AppLanguage): String = when (lang) {
-        AppLanguage.FR -> "Statut E-mail"
-        AppLanguage.EN -> "Email Status"
-        AppLanguage.ES -> "Estado del correo"
-        AppLanguage.DE -> "E-Mail-Status"
-        AppLanguage.PT -> "Estado do e-mail"
-        AppLanguage.RU -> "Статус e-mail"
-        AppLanguage.IT -> "Stato e-mail"
-    }
-
-    fun verified(lang: AppLanguage): String = when (lang) {
-        AppLanguage.FR -> "Vérifié"
-        AppLanguage.EN -> "Verified"
-        AppLanguage.ES -> "Verificado"
-        AppLanguage.DE -> "Bestätigt"
-        AppLanguage.PT -> "Verificado"
-        AppLanguage.RU -> "Подтвержден"
-        AppLanguage.IT -> "Verificato"
-    }
-
-    fun discordAccount(lang: AppLanguage): String = when (lang) {
-        AppLanguage.FR -> "Compte Discord"
-        AppLanguage.EN -> "Discord Account"
-        AppLanguage.ES -> "Cuenta de Discord"
-        AppLanguage.DE -> "Discord-Konto"
-        AppLanguage.PT -> "Conta do Discord"
-        AppLanguage.RU -> "Аккаунт Discord"
-        AppLanguage.IT -> "Account Discord"
-    }
-
-    fun linked(lang: AppLanguage): String = when (lang) {
-        AppLanguage.FR -> "Lié"
-        AppLanguage.EN -> "Linked"
-        AppLanguage.ES -> "Vinculado"
-        AppLanguage.DE -> "Verknüpft"
-        AppLanguage.PT -> "Vinculado"
-        AppLanguage.RU -> "Привязан"
-        AppLanguage.IT -> "Collegato"
-    }
-
-    fun unlinked(lang: AppLanguage): String = when (lang) {
-        AppLanguage.FR -> "Non lié"
-        AppLanguage.EN -> "Unlinked"
-        AppLanguage.ES -> "No vinculado"
-        AppLanguage.DE -> "No vinculado"
-        AppLanguage.PT -> "Não vinculado"
-        AppLanguage.RU -> "Не привязан"
-        AppLanguage.IT -> "Non collegato"
-    }
-
-    fun networkStatus(lang: AppLanguage): String = when (lang) {
-        AppLanguage.FR -> "Réseau Nextendo"
-        AppLanguage.EN -> "Nextendo Network"
-        AppLanguage.ES -> "Red Nextendo"
-        AppLanguage.DE -> "Nextendo-Netzwerk"
-        AppLanguage.PT -> "Rede Nextendo"
-        AppLanguage.RU -> "Сеть Nextendo"
-        AppLanguage.IT -> "Rete Nextendo"
-    }
-
-    fun operational(lang: AppLanguage): String = when (lang) {
-        AppLanguage.FR -> "Opérationnel"
-        AppLanguage.EN -> "Operational"
-        AppLanguage.ES -> "Operativo"
-        AppLanguage.DE -> "Betriebsbereit"
-        AppLanguage.PT -> "Operacional"
-        AppLanguage.RU -> "Работает"
-        AppLanguage.IT -> "Operativo"
     }
 
     fun logout(lang: AppLanguage): String = when (lang) {
