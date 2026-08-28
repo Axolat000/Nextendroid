@@ -365,11 +365,20 @@ class NextendoRepository(
             val response = apiService.getOnlineCounts()
             if (response.isSuccessful && response.body()?.counts != null) {
                 val rawMap = response.body()!!.counts
-                val mappedMap = mutableMapOf<String, Int>()
+                // The server reports the SAME per-game total under every title-id alias of
+                // that game (e.g. Splatoon 2's 3 title IDs all carry the identical count) —
+                // dedupe by canonical title ID first, otherwise a game with N known aliases
+                // gets summed N times and shows a wildly inflated player count.
+                val perCanonical = mutableMapOf<String, Int>()
                 rawMap.forEach { (key, value) ->
-                    val officialName = GameDictionary.getOfficialNextendoGameName(key)
+                    val canonical = GameDictionary.getCanonicalTitleId(key) ?: key
+                    perCanonical[canonical] = value
+                }
+                val mappedMap = mutableMapOf<String, Int>()
+                perCanonical.forEach { (canonical, value) ->
+                    val officialName = GameDictionary.getOfficialNextendoGameName(canonical)
                     if (officialName != null) {
-                        mappedMap[officialName] = (mappedMap[officialName] ?: 0) + value
+                        mappedMap[officialName] = value
                     }
                 }
                 mappedMap
