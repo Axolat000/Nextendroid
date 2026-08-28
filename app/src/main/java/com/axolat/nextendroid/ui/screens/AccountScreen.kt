@@ -415,7 +415,7 @@ fun AccountScreen(
             )
         }
 
-        // Language Options Selector Card
+        // Language Options Selector Card (Lists ALL 7 Supported Languages)
         item {
             Column(
                 modifier = Modifier
@@ -423,55 +423,34 @@ fun AccountScreen(
                     .clip(RoundedCornerShape(20.dp))
                     .background(NextendoSurfaceCard)
             ) {
-                // Français Option
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onLanguageChange(AppLanguage.FR) }
-                        .padding(horizontal = 20.dp, vertical = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "🇫🇷 Français",
-                        color = NextendoTextPrimary,
-                        fontSize = 15.sp,
-                        fontWeight = if (appLanguage == AppLanguage.FR) FontWeight.Bold else FontWeight.Normal
-                    )
-                    if (appLanguage == AppLanguage.FR) {
+                val languages = AppLanguage.entries
+                languages.forEachIndexed { index, lang ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onLanguageChange(lang) }
+                            .padding(horizontal = 20.dp, vertical = 14.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
-                            text = "✓",
-                            color = NextendoPink,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
+                            text = "${lang.flag} ${lang.displayName}",
+                            color = NextendoTextPrimary,
+                            fontSize = 15.sp,
+                            fontWeight = if (appLanguage == lang) FontWeight.Bold else FontWeight.Normal
                         )
+                        if (appLanguage == lang) {
+                            Text(
+                                text = "✓",
+                                color = NextendoPink,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            )
+                        }
                     }
-                }
 
-                HorizontalDivider(color = NextendoDivider, modifier = Modifier.padding(horizontal = 16.dp))
-
-                // English Option
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onLanguageChange(AppLanguage.EN) }
-                        .padding(horizontal = 20.dp, vertical = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "🇬🇧 English",
-                        color = NextendoTextPrimary,
-                        fontSize = 15.sp,
-                        fontWeight = if (appLanguage == AppLanguage.EN) FontWeight.Bold else FontWeight.Normal
-                    )
-                    if (appLanguage == AppLanguage.EN) {
-                        Text(
-                            text = "✓",
-                            color = NextendoPink,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
-                        )
+                    if (index < languages.size - 1) {
+                        HorizontalDivider(color = NextendoDivider, modifier = Modifier.padding(horizontal = 16.dp))
                     }
                 }
             }
