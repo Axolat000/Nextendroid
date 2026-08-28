@@ -143,6 +143,16 @@ object Strings {
 
     fun accountTitle(lang: AppLanguage): String = tabAccount(lang)
 
+    fun changeProfilePicture(lang: AppLanguage): String = when (lang) {
+        AppLanguage.FR -> "Changer la photo de profil"
+        AppLanguage.EN -> "Change profile picture"
+        AppLanguage.ES -> "Cambiar foto de perfil"
+        AppLanguage.DE -> "Profilbild ändern"
+        AppLanguage.PT -> "Mudar foto de perfil"
+        AppLanguage.RU -> "Сменить фото профиля"
+        AppLanguage.IT -> "Cambia foto profilo"
+    }
+
     fun boosterBadge(lang: AppLanguage): String = when (lang) {
         AppLanguage.FR -> "Membre Booster"
         AppLanguage.EN -> "Booster Member"

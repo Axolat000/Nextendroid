@@ -1,6 +1,5 @@
 package com.axolat.nextendroid.ui.screens
 
-import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -16,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.scale
 import com.axolat.nextendroid.data.model.CountryUtils
 import com.axolat.nextendroid.data.model.GameDictionary
 import com.axolat.nextendroid.data.model.UserAccount
@@ -39,27 +40,21 @@ fun AccountScreen(
     userAccount: UserAccount?,
     appLanguage: AppLanguage,
     onLanguageChange: (AppLanguage) -> Unit,
+    modifier: Modifier = Modifier,
     onSaveUsernameClick: (String) -> Unit = {},
     onSaveCountryClick: (String) -> Unit = {},
     onSaveProfileImageClick: (String) -> Unit = {},
     onSettingsClick: () -> Unit = {},
-    onLogoutClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onLogoutClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     var isEditingUsername by remember { mutableStateOf(false) }
     var usernameInput by remember { mutableStateOf(userAccount?.displayUsername ?: "Axolat") }
-
-    var isEditingCountry by remember { mutableStateOf(false) }
-    var selectedCountryCode by remember { mutableStateOf(userAccount?.country ?: "FR") }
     var countryDropdownExpanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(userAccount) {
         if (!isEditingUsername) {
             usernameInput = userAccount?.displayUsername ?: "Axolat"
-        }
-        if (!isEditingCountry) {
-            selectedCountryCode = userAccount?.country ?: "FR"
         }
     }
 
@@ -75,14 +70,14 @@ fun AccountScreen(
                     @Suppress("DEPRECATION")
                     MediaStore.Images.Media.getBitmap(context.contentResolver, it)
                 }
-                val scaled = Bitmap.createScaledBitmap(bitmap, 512, 512, true)
+                val scaled = bitmap.scale(512, 512)
                 val stream = ByteArrayOutputStream()
-                scaled.compress(Bitmap.CompressFormat.JPEG, 85, stream)
+                scaled.compress(android.graphics.Bitmap.CompressFormat.JPEG, 85, stream)
                 val bytes = stream.toByteArray()
                 val base64Str = Base64.encodeToString(bytes, Base64.NO_WRAP)
                 onSaveProfileImageClick(base64Str)
                 Toast.makeText(context, "Photo de profil mise à jour !", Toast.LENGTH_SHORT).show()
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 Toast.makeText(context, "Erreur lors de la sélection d'image", Toast.LENGTH_SHORT).show()
             }
         }
@@ -158,7 +153,7 @@ fun AccountScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Edit,
-                            contentDescription = "Changer photo de profil",
+                            contentDescription = Strings.changeProfilePicture(appLanguage),
                             tint = NextendoDarkBackground,
                             modifier = Modifier.size(16.dp)
                         )
@@ -168,7 +163,7 @@ fun AccountScreen(
                 Spacer(modifier = Modifier.height(6.dp))
 
                 Text(
-                    text = "Changer la photo de profil",
+                    text = Strings.changeProfilePicture(appLanguage),
                     color = NextendoPink,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -378,10 +373,7 @@ fun AccountScreen(
                             onDismissRequest = { countryDropdownExpanded = false },
                             modifier = Modifier.background(NextendoSurfaceElevated)
                         ) {
-                            val countryList = CountryUtils.getAllCountries()
-                            for (pair in countryList) {
-                                val cCode = pair.first
-                                val cName = pair.second
+                            CountryUtils.getAllCountries().forEach { (cCode, cName) ->
                                 val cFlag = CountryUtils.getCountryFlag(cCode)
                                 DropdownMenuItem(
                                     text = {
@@ -392,7 +384,6 @@ fun AccountScreen(
                                     },
                                     onClick = {
                                         countryDropdownExpanded = false
-                                        selectedCountryCode = cCode
                                         onSaveCountryClick(cCode)
                                     }
                                 )
@@ -472,7 +463,7 @@ fun AccountScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.ExitToApp,
+                        imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                         contentDescription = null,
                         tint = NextendoPink,
                         modifier = Modifier.size(20.dp)
