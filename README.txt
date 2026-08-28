@@ -1,107 +1,108 @@
 ========================================================================
                          NEXTENDROID (Android)
-       Client Android officiel & moderne pour le réseau Nextendo
+         Official & Modern Android Client for Nextendo Network
 ========================================================================
 
-Nextendroid est une application Android native développée en Kotlin avec
-Jetpack Compose, offrant une interface élégante et réactive pour interagir
-avec le réseau Nextendo (Nextendo Account & Services).
+Nextendroid is a native Android application built in Kotlin using Jetpack
+Compose, offering an elegant, responsive interface to interact with 
+Nextendo Network services (Nextendo Account & Cloud Services).
 
 ------------------------------------------------------------------------
-                             FONCTIONNALITÉS
+                             FEATURES
 ------------------------------------------------------------------------
 
-1. ACCUEIL (HOME) :
-   - Salutation dynamique personnalisée selon l'heure de la journée.
-   - Section "EN LIGNE" : Liste défilante des amis actuellement connectés 
-     avec l'icône du jeu en cours et leur statut.
-   - Section "À QUOI JOUENT VOS AMIS" : Liste des 14 jeux officiels 
-     Nextendo auxquels vos amis ont joué, avec les jaquettes haute résolution 
-     et la superposition des photos de profil (PP) de vos amis.
-   - Section "SUR NEXTENDO" : Classement du nombre total de joueurs en ligne 
-     sur chaque jeu du réseau Nextendo.
-   - Bouton de rafraîchissement manuel et mise à jour automatique en arrière-plan (15s).
+1. HOME SCREEN:
+   - Dynamic greeting personalized based on the time of day.
+   - "ONLINE" Section: Horizontal scrollable list of currently connected 
+     friends displaying active game icons and status.
+   - "WHAT YOUR FRIENDS PLAY": Grid/list of the 14 official Nextendo 
+     supported games played by your friends, with high-resolution box arts 
+     and overlaid profile pictures (PFP) of your friends.
+   - "ON NEXTENDO": Live leaderboard showing online player count per game.
+   - Manual refresh button and 15-second background auto-refresh loop.
 
-2. AMIS (FRIENDS) :
-   - Liste complète des amis triés par statut (favoris, en ligne, hors ligne).
-   - Basculement des favoris (★ / ☆).
-   - Fiche détaillée d'un ami (FriendDetailScreen) affichant son code ami, 
-     son statut et son historique de jeux.
+2. FRIENDS:
+   - Complete list of friends sorted by status (favorites, online, offline).
+   - Favorite friend toggle (★ / ☆).
+   - Detailed friend view (FriendDetailScreen) displaying friend code, 
+     online presence, and individual play history.
 
-3. DEMANDES D'AMIS (ADD FRIEND) :
-   - Affichage de votre propre code ami avec bouton "Copier".
-   - Champ d'envoi de demandes d'ami via code ami (POST /api/friends).
-   - Gestion des demandes d'ami entrantes avec boutons "Accepter" et "Refuser".
+3. FRIEND REQUESTS (ADD FRIEND):
+   - Display your own friend code with one-tap "Copy" button.
+   - Send friend requests using friend codes (POST /api/friends).
+   - Manage incoming friend requests with instant Accept & Decline actions.
 
-4. SAUVEGARDES CLOUD (SAVES) :
-   - Visualisation de l'espace de stockage cloud utilisé.
-   - Liste des sauvegardes synchronisées avec Ryujinx et la Nintendo Switch.
-   - Badge d'éligibilité Booster.
+4. CLOUD SAVES:
+   - Cloud save storage usage visualization (used MB / remaining MB).
+   - List of cloud saves automatically synced with Ryujinx emulator and 
+     Nintendo Switch console.
+   - Booster membership eligibility badge.
 
-5. COMPTE & PROFIL (ACCOUNT) :
-   - Modification du pseudo avec resynchronisation serveur.
-   - Modification du pays (avec drapeaux emoji).
-   - Changement de photo de profil (PP) personnalisée depuis la galerie photo 
-     (encodage Base64 et upload vers POST /api/profile).
-   - Support multilingue (Français, English, Español, Deutsch, Português, Русский, Italiano).
+5. ACCOUNT & PROFILE:
+   - Username editing with real-time server resynchronization.
+   - Country selector with emoji flags.
+   - Custom Profile Picture (PFP) picker from device gallery 
+     (Base64 JPEG encoding and upload via POST /api/profile).
+   - Multi-language support (English, French, Spanish, German, 
+     Portuguese, Russian, Italian).
 
-6. PARAMÈTRES (SETTINGS) :
-   - Personnalisation de la couleur d'accentuation (Nextendo Pink, Encre, 
-     Prune, Framboise, Braise, Or, Menthe, Corail) ou couleur personnalisée.
-   - Aperçu en direct des boutons et textes.
-
-------------------------------------------------------------------------
-                        REQUÊTES API BACKEND
-------------------------------------------------------------------------
-
-L'application interagit directement avec l'API REST de Nextendo Network :
-- POST /api/login             : Connexion utilisateur
-- GET  /api/me                : Informations du compte connecté
-- GET  /api/profile           : Consultation du profil utilisateur
-- POST /api/profile           : Mise à jour de la photo de profil (Base64 JPEG)
-- POST /api/username          : Modification du pseudo
-- POST /api/country           : Modification du pays
-- GET  /api/friends           : Liste d'amis et demandes entrantes
-- POST /api/friends           : Envoi de demande d'ami
-- POST /api/friends/accept    : Acceptation d'une demande d'ami
-- POST /api/friends/decline   : Refus d'une demande d'ami
-- POST /api/friends/favorite  : Bascule favori
-- GET  /api/friends/history   : Historique de jeu individuel par PID d'ami
-- GET  /api/saves             : Sauvegardes cloud
-- GET  /api/online-counts     : Statistiques des joueurs en ligne sur Nextendo
+6. SETTINGS:
+   - Accent color theme picker (Nextendo Pink, Ink, Plum, Raspberry, 
+     Ember, Gold, Mint, Coral, or custom HEX code).
+   - Live interactive UI button and text color preview.
 
 ------------------------------------------------------------------------
-                        STRUCTURE DU PROJET
+                        BACKEND API ENDPOINTS
+------------------------------------------------------------------------
+
+The application communicates directly with Nextendo Network REST API:
+- POST /api/login             : User authentication
+- GET  /api/me                : Logged-in user account details
+- GET  /api/profile           : View user profile
+- POST /api/profile           : Update profile picture (Base64 JPEG)
+- POST /api/username          : Update display username
+- POST /api/country           : Update country code
+- GET  /api/friends           : List friends & incoming requests
+- POST /api/friends           : Send friend request
+- POST /api/friends/accept    : Accept friend request
+- POST /api/friends/decline   : Decline friend request
+- POST /api/friends/favorite  : Toggle favorite friend
+- GET  /api/friends/history   : Individual play history per friend PID
+- GET  /api/saves             : Cloud save list & quota
+- GET  /api/online-counts     : Network online player statistics
+
+------------------------------------------------------------------------
+                        PROJECT STRUCTURE
 ------------------------------------------------------------------------
 
 Nextendroid/
 ├── app/
 │   ├── src/main/
-│   │   ├── assets/covers/     <- Jaquettes locales des 14 jeux Nextendo
+│   │   ├── assets/covers/     <- Local high-res box arts for 14 Nextendo games
 │   │   └── java/com/axolat/nextendroid/
-│   │       ├── data/          <- Repositories, Modèles (Models, GameDictionary) et API REST
+│   │       ├── data/          <- Repositories, Models (Models, GameDictionary) & API REST
 │   │       ├── ui/
-│   │       │   ├── components/<- Composants Compose (AvatarView, GameCard, BottomNavBar...)
-│   │       │   ├── screens/   <- Écrans (HomeScreen, FriendsScreen, AccountScreen, SettingsScreen...)
-│   │       │   ├── theme/     <- Thème, Couleurs et AppLanguage/Strings
+│   │       │   ├── components/<- Compose Components (AvatarView, GameCard, BottomNavBar...)
+│   │       │   ├── screens/   <- Screens (HomeScreen, FriendsScreen, AccountScreen, SettingsScreen...)
+│   │       │   ├── theme/     <- Theme, Colors & AppLanguage/Strings
 │   │       │   └── viewmodel/ <- NextendoViewModel (StateFlow & Coroutines)
 │   │       └── MainActivity.kt
 └── README.txt
 
 ------------------------------------------------------------------------
-                            COMPILATION
+                            BUILDING
 ------------------------------------------------------------------------
 
-Pour compiler l'application en mode Debug :
+To build the application in Debug mode:
   ./gradlew assembleDebug
 
-L'APK généré se trouvera dans :
+The output APK will be generated at:
   app/build/outputs/apk/debug/app-debug.apk
 
 ------------------------------------------------------------------------
-                              LICENCE
+                             LICENSE
 ------------------------------------------------------------------------
 
-Ce projet est distribué sous la licence open-source MIT License.
-Voir le fichier LICENSE pour plus de détails.
+This project is distributed under the open-source MIT License.
+See the LICENSE file for more details.
 ========================================================================
